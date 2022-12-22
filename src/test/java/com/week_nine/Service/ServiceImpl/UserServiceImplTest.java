@@ -2,40 +2,57 @@ package com.week_nine.Service.ServiceImpl;
 
 import com.week_nine.Enums.Role;
 import com.week_nine.Model.User;
+import com.week_nine.Pojo.UserSignupDto;
 import com.week_nine.Repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-@DataJpaTest
-class UserRepositoryTest {
+class UserServiceImplTest {
 
-    @Autowired
+    @Mock
     UserRepository userRepository;
-    User user;
+
+    @InjectMocks
+    UserServiceImpl userService;
+
+    private User user;
+    private UserSignupDto userSignupDto;
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setRole(Role.ADMIN.name());
-        user.setFirstName("Udeme");
-        user.setLastName("Kendrick");
-        user.setPhoneNumber("08142274320");
-        user.setEmail("udemekendrick@gmail.com");
-        user.setPassword("UdKen@4320");
+        MockitoAnnotations.openMocks(this);
+        user = User.builder()
+                .role(Role.ADMIN.name())
+                .firstName("Kendrick")
+                .lastName("Udeme")
+                .gender("Male")
+                .phoneNumber("08022608642")
+                .email("kendrickudeme@gmail.com")
+                .password("KenUd@4320")
+                .build();
+        userSignupDto = UserSignupDto.builder()
+                .firstName("Kendrick")
+                .lastName("Udeme")
+                .gender("Male")
+                .phoneNumber("08022608642")
+                .email("kendrickudeme@gmail.com")
+                .password("KenUd@4320")
+                .build();
+        when(userRepository.existsByEmail(anyString())).thenReturn(false);
+        when(userRepository.save(user)).thenReturn(user);
     }
 
     @Test
     void createAdmin() {
-        User admin = userRepository.save(user);
-        assertThat(admin).isNotNull();
-        assertThat(admin.getEmail()).isEqualTo(user.getEmail());
-    }
-
-    @Test
-    void createCustomer() {
+        User actual = userService.createAdmin(userSignupDto);
+        Assertions.assertEquals(user, actual);
     }
 }

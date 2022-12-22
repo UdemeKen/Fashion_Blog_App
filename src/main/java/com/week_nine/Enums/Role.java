@@ -1,2 +1,5 @@
-package com.week_nine.Enums;public enum Role {
+package com.week_nine.Enums;
+
+public enum Role {
+    ADMIN, CUSTOMER, VISITOR
 }

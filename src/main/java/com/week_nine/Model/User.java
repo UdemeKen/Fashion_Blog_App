@@ -4,11 +4,17 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity(name = "Users")
 @Builder
-@Data
-@AllArgsConstructor
+@Entity
+@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Table(name = "user_tbl",
+                uniqueConstraints = @UniqueConstraint(name = "email_unique",
+                columnNames = "email"))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +23,8 @@ public class User {
     private String firstName;
 
     private String lastName;
+
+    private String gender;
 
     private String phoneNumber;
 
